@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kundformulär</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <meta
+      name="description"
+      content="Fyll i dina kunduppgifter för att lägga en beställning."
+    />
+    <script>
+      // --- Dark mode bootstrapping (avoids flash) ---
+      (function () {
+        const saved = localStorage.getItem("theme"); // "light" | "dark" | null
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = saved ?? (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Site header -->
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">
+          <img src="/assets/logo.png" alt="Logo" class="brand__logo" />
+          <span class="brand__name">TomasBåt</span>
+        </a>
+        <nav class="header-actions">
+          <button
+            id="themeToggle"
+            class="icon-btn"
+            aria-label="Växla tema"
+            title="Växla tema"
+          >
+            🌓
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main content card -->
+    <main class="container">
+      <!-- Brand row (bigger logo / tagline) -->
+      <section class="brand-row" aria-label="Varumärke">
+        <img src="/assets/logo.png" alt="Logo" class="brand-row__logo" />
+        <p class="brand-row__tagline">Kunduppgifter för beställning</p>
+      </section>
+
+      <header class="header">
+        <h1>Kundformulär</h1>
+        <p class="lead">
+          Fyll i dina uppgifter nedan. Vi återkommer via e-post.
+        </p>
+      </header>
+
+      <form
+        id="customer-form"
+        action="https://formspree.io/f/xblzqjgr"
+        method="POST"
+        novalidate
+        class="stack"
+      >
+        <label>
+          Namn
+          <input name="name" type="text" autocomplete="name" required />
+        </label>
+
+        <label>
+          E-post
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label>
+          Telefon
+          <input name="phone" type="tel" autocomplete="tel" />
+        </label>
+
+        <label>
+          Adress
+          <input
+            name="address"
+            type="text"
+            autocomplete="street-address"
+            required
+          />
+        </label>
+
+        <div class="grid-2">
+          <label>
+            Postnummer
+            <input name="zip" type="text" autocomplete="postal-code" />
+          </label>
+
+          <label>
+            Ort
+            <input name="city" type="text" autocomplete="address-level2" />
+          </label>
+        </div>
+
+        <label>
+          Meddelande / ordernoteringar (valfritt)
+          <textarea
+            name="notes"
+            rows="4"
+            placeholder="Tillval, leveransinfo osv."
+          ></textarea>
+        </label>
+
+        <!-- Spam honeypot -->
+        <input
+          type="text"
+          name="_gotcha"
+          tabindex="-1"
+          autocomplete="off"
+          class="hp"
+        />
+
+        <!-- Email subject + redirect after submit -->
+        <input
+          type="hidden"
+          name="_subject"
+          value="Ny kundformulär-insändning"
+        />
+        <input
+          type="hidden"
+          name="_next"
+          value="https://formspree.io/f/xblzqjgr-thank-you.html"
+        />
+
+        <button type="submit" class="btn">Skicka</button>
+        <p id="form-status" class="muted" aria-live="polite"></p>
+      </form>
+
+      <footer class="footer">
+        <small
+          >Genom att skicka godkänner du vår
+          <a href="/privacy.html">Integritetspolicy</a>.</small
+        >
+      </footer>
+    </main>
+
+    <script>
+      // Theme toggle + persistence
+      const toggle = document.getElementById("themeToggle");
+      toggle?.addEventListener("click", () => {
+        const root = document.documentElement;
+        const current = root.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+    </script>
+    <script>
+      // JS submit -> redirect (works on free plan)
+      (function () {
+        const form = document.getElementById("customer-form");
+        const status = document.getElementById("form-status");
+        const endpoint = form.getAttribute("action");
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const data = new FormData(form);
+
+          // Optional: basic spam honeypot check
+          if (data.get("_gotcha")) return;
+
+          // UX: disable button while sending
+          const btn = form.querySelector("button[type='submit']");
+          btn.disabled = true;
+          btn.textContent = "Skickar…";
+
+          try {
+            const res = await fetch(endpoint, {
+              method: "POST",
+              body: data,
+              headers: { Accept: "application/json" },
+            });
+
+            if (res.ok) {
+              // success -> go to your page
+              window.location.href = "/thank-you.html"; // or full https://YOUR_DOMAIN/thank-you.html
+            } else {
+              status.textContent = "Kunde inte skicka formuläret. Försök igen.";
+              btn.disabled = false;
+              btn.textContent = "Skicka";
+            }
+          } catch (err) {
+            status.textContent =
+              "Nätverksfel. Kontrollera uppkopplingen och försök igen.";
+            btn.disabled = false;
+            btn.textContent = "Skicka";
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

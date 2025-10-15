@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tack!</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script>
+      (function () {
+        const saved = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = saved ?? (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="/">
+          <img src="/assets/logo.png" alt="Logo" class="brand__logo" />
+          <span class="brand__name">TomasBåt</span>
+        </a>
+        <nav class="header-actions">
+          <button
+            id="themeToggle"
+            class="icon-btn"
+            aria-label="Växla tema"
+            title="Växla tema"
+          >
+            🌓
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="brand-row" aria-label="Varumärke">
+        <img src="/assets/logo.png" alt="Logo" class="brand-row__logo" />
+        <p class="brand-row__tagline">Tack för din insändning</p>
+      </section>
+
+      <h1>Tack!</h1>
+      <p>
+        Vi har mottagit dina uppgifter. En bekräftelse har skickats om detta är
+        aktiverat.
+      </p>
+      <a class="btn" href="/">Tillbaka</a>
+    </main>
+
+    <script>
+      const toggle = document.getElementById("themeToggle");
+      toggle?.addEventListener("click", () => {
+        const root = document.documentElement;
+        const current = root.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+    </script>
+  </body>
+</html>
