@@ -8,6 +8,9 @@
   --brand:#1d94e8;
   --border:#e5e7eb;
 
+  /* custom select arrow (light) */
+  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+
   --space: clamp(12px, 1.8vw, 20px);
   --radius: 14px;
   --shadow: 0 10px 30px rgba(0,0,0,.08);
@@ -26,6 +29,8 @@ html[data-theme="dark"]{
   --brand:#1d94e8;  /* slightly lighter for contrast */
   --border:#2a2f3a;
   --shadow: 0 10px 30px rgba(0,0,0,.45);
+  /* custom select arrow (dark) */
+  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f7fb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
 }
 
 *{box-sizing:border-box}
@@ -57,7 +62,7 @@ body{
   gap: 12px;
 }
 .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit}
-.brand__logo{width:32px; height:32px; display:block}
+.brand__logo{width:clamp(200px, 18vw, 420px); height:auto; display:block}
 .brand__name{font-weight:700; letter-spacing:.2px}
 
 .icon-btn{
@@ -96,6 +101,64 @@ body{
 .lead{font-size:var(--fs-lead); color:var(--muted); margin:0}
 .footer{margin-top: clamp(12px, 2.5vw, 18px)}
 
+/* ---- Tabs ---- */
+.tabs{
+  display:flex;
+  gap:0;
+  margin-top: clamp(16px, 3vw, 24px);
+  margin-bottom: -1px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn{
+  appearance:none;
+  border:none;
+  border-top-left-radius:var(--radius);
+  border-top-right-radius:var(--radius);
+  border-bottom:1px solid var(--border);
+  background:#e5e7eb;
+  color:#6b7280;
+  font:inherit;
+  font-weight:600;
+  padding:14px clamp(32px, 6vw, 48px);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  position:relative;
+  z-index:1;
+}
+.tab-btn:hover{
+  background:#d1d5db;
+  color:#374151;
+}
+.tab-btn.active{
+  background:var(--surface);
+  color:var(--fg);
+  border-bottom-color:var(--surface);
+  z-index:2;
+}
+html[data-theme="dark"] .tab-btn{
+  background:#2a2f3a;
+  color:#a3acc2;
+}
+html[data-theme="dark"] .tab-btn:hover{
+  background:#3a3f4a;
+  color:var(--fg);
+}
+html[data-theme="dark"] .tab-btn.active{
+  background:var(--surface);
+  color:var(--fg);
+  border-bottom-color:var(--surface);
+}
+
+/* ---- Customer forms ---- */
+.customer-form{
+  display:none;
+  margin-top:0;
+  padding-top:clamp(20px, 3vw, 28px);
+}
+.customer-form.active{
+  display:block;
+}
+
 /* vertical spacing utility */
 .stack > * + *{ margin-top: clamp(10px, 2.4vw, 16px); }
 
@@ -106,16 +169,40 @@ label textarea{
   display:block;
   width:100%;
   margin-top:6px;
-  padding:14px 12px;
+  padding:12px 12px;
   border:1px solid var(--border);
   border-radius:12px;
   background:#fff;
   color:#111;
-  font:inherit;
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-family:inherit;
+  line-height:1.5;
 }
 html[data-theme="dark"] label input,
 html[data-theme="dark"] label textarea{
   background:#0f1115; color:var(--fg); border-color: var(--border);
+}
+
+/* selects styled like inputs */
+label select{
+  display:block;
+  width:100%;
+  margin-top:6px;
+  padding:12px 42px 12px 12px; /* room for arrow */
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff var(--select-arrow) no-repeat right 12px center;
+  background-size:16px 16px;
+  color:#111;
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-family:inherit;
+  appearance:none;
+}
+html[data-theme="dark"] label select{
+  background:#0f1115 var(--select-arrow) no-repeat right 12px center;
+  background-size:16px 16px;
+  color:var(--fg);
+  border-color:var(--border);
 }
 
 label textarea{resize:vertical; min-height:120px}
@@ -124,6 +211,11 @@ input:focus-visible,
 textarea:focus-visible{
   outline:3px solid color-mix(in oklab, var(--brand), white 65%);
   outline-offset: 2px;
+  border-color: color-mix(in oklab, var(--brand), white 35%);
+}
+label select:focus-visible{
+  outline:3px solid color-mix(in oklab, var(--brand), white 65%);
+  outline-offset:2px;
   border-color: color-mix(in oklab, var(--brand), white 35%);
 }
 
@@ -148,6 +240,7 @@ textarea:focus-visible{
   background:var(--brand);
   color:#fff;
   font-weight:700;
+  font-size: clamp(16px, 1.4vw, 18px);
   padding:14px 18px;
   cursor:pointer;
   width:100%;
@@ -161,6 +254,86 @@ textarea:focus-visible{
 /* ---- Links ---- */
 a{color:var(--brand); text-decoration:underline}
 a:hover{text-decoration:none}
+
+/* ---- Site footer ---- */
+.site-footer{
+  margin-top: clamp(16px, 6vh, 48px);
+  background:#1e3a5f;
+  color:#ffffff;
+}
+.site-footer__inner{
+  max-width: 1100px;
+  margin-inline:auto;
+  padding: clamp(36px, 5vw, 56px) clamp(12px, 3vw, 24px);
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vw, 40px);
+}
+@media (min-width: 768px){
+  .site-footer__inner{ grid-template-columns: 1fr 1fr 1fr; }
+}
+.site-footer__title{
+  margin:0 0 12px;
+  font-size: clamp(22px, 3.6vw, 28px);
+  font-weight:700;
+  color:#ffffff;
+}
+.site-footer__tagline{
+  margin:0;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height:1.6;
+  color:#e5e7eb;
+}
+.site-footer__heading{
+  margin:0 0 16px;
+  font-size: clamp(18px, 2.4vw, 20px);
+  font-weight:700;
+  color:#ffffff;
+}
+.site-footer__services,
+.site-footer__contact{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.site-footer__services li,
+.site-footer__contact li{
+  font-size: clamp(14px, 1.6vw, 16px);
+  color:#e5e7eb;
+}
+.site-footer__contact a{
+  color:#ffffff;
+  text-decoration:none;
+  font-weight:500;
+}
+.site-footer__contact a:hover{
+  text-decoration:underline;
+}
+.site-footer__icon{
+  display:inline-block;
+  margin-right:8px;
+  font-size:16px;
+}
+.site-footer__divider{
+  width:100%;
+  height:1px;
+  background:#ffffff;
+  opacity:0.2;
+  margin:0;
+}
+.site-footer__copyright{
+  max-width: 1100px;
+  margin-inline:auto;
+  padding: clamp(16px, 2.5vw, 24px) clamp(12px, 3vw, 24px);
+  text-align:center;
+}
+.site-footer__copyright small{
+  font-size: clamp(12px, 1.4vw, 14px);
+  color:#e5e7eb;
+}
 
 /* ---- Print ---- */
 @media print{

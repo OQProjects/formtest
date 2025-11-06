@@ -27,9 +27,8 @@
       <div class="site-header__inner">
         <a class="brand" href="/">
           <img src="/assets/logo.png" alt="Logo" class="brand__logo" />
-          <span class="brand__name">Båtman</span>
         </a>
-        <nav class="header-actions">
+        <!-- <nav class="header-actions">
           <button
             id="themeToggle"
             class="icon-btn"
@@ -38,18 +37,12 @@
           >
             🌓
           </button>
-        </nav>
+        </nav> -->
       </div>
     </header>
 
     <!-- Main content card -->
     <main class="container">
-      <!-- Brand row (bigger logo / tagline) -->
-      <section class="brand-row" aria-label="Varumärke">
-        <img src="/assets/logo.png" alt="Logo" class="brand-row__logo" />
-        <p class="brand-row__tagline">Kunduppgifter för beställning</p>
-      </section>
-
       <header class="header">
         <h1>Kundformulär</h1>
         <p class="lead">
@@ -57,91 +50,324 @@
         </p>
       </header>
 
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button
+          class="tab-btn active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="private-form"
+          id="private-tab"
+          data-tab="private"
+        >
+          Privatkund
+        </button>
+        <button
+          class="tab-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="company-form"
+          id="company-tab"
+          data-tab="company"
+        >
+          Företagskund
+        </button>
+      </div>
+
+      <!-- Private Customer Form -->
       <form
-        id="customer-form"
+        id="private-form"
+        class="customer-form active"
+        role="tabpanel"
+        aria-labelledby="private-tab"
         action="https://formspree.io/f/xblzqjgr"
         method="POST"
         novalidate
-        class="stack"
       >
-        <label>
-          Namn
-          <input name="name" type="text" autocomplete="name" required />
-        </label>
+        <div class="stack">
+          <div class="grid-2">
+            <label>
+              Förnamn
+              <input
+                name="firstName"
+                type="text"
+                required
+                autocomplete="given-name"
+                placeholder="John"
+              />
+            </label>
+            <label>
+              Efternamn
+              <input
+                name="lastName"
+                type="text"
+                required
+                autocomplete="family-name"
+                placeholder="Andersson"
+              />
+            </label>
+          </div>
 
-        <label>
-          E-post
-          <input name="email" type="email" autocomplete="email" required />
-        </label>
+          <div class="grid-2">
+            <label>
+              E-post
+              <input
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="john@example.com"
+              />
+            </label>
+            <label>
+              Telefonnummer
+              <input
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                placeholder="0701234567"
+              />
+            </label>
+          </div>
 
-        <label>
-          Telefon
-          <input name="phone" type="tel" autocomplete="tel" />
-        </label>
+          <label>
+            Adress
+            <input
+              name="address"
+              type="text"
+              required
+              autocomplete="street-address"
+              placeholder="Storgatan 1"
+            />
+          </label>
 
-        <label>
-          Adress
+          <div class="grid-2">
+            <label>
+              Postnummer
+              <input
+                name="zip"
+                type="text"
+                required
+                inputmode="numeric"
+                autocomplete="postal-code"
+                placeholder="12345"
+              />
+            </label>
+            <label>
+              Stad
+              <input
+                name="city"
+                type="text"
+                required
+                autocomplete="address-level2"
+                placeholder="Stockholm"
+              />
+            </label>
+          </div>
+
+          <!-- Spam honeypot -->
           <input
-            name="address"
             type="text"
-            autocomplete="street-address"
-            required
+            name="_gotcha"
+            tabindex="-1"
+            autocomplete="off"
+            class="hp"
           />
-        </label>
 
-        <div class="grid-2">
-          <label>
-            Postnummer
-            <input name="zip" type="text" autocomplete="postal-code" />
-          </label>
+          <!-- Hidden fields -->
+          <input type="hidden" name="customerType" value="private" />
+          <input
+            type="hidden"
+            name="_subject"
+            value="Ny privatkund registrering"
+          />
+          <input
+            type="hidden"
+            name="_next"
+            value="https://formspree.io/f/xblzqjgr-thank-you.html"
+          />
 
-          <label>
-            Ort
-            <input name="city" type="text" autocomplete="address-level2" />
-          </label>
+          <button type="submit" class="btn">Registrera som ny kund</button>
+          <p class="form-status muted" aria-live="polite"></p>
         </div>
-
-        <label>
-          Meddelande / ordernoteringar (valfritt)
-          <textarea
-            name="notes"
-            rows="4"
-            placeholder="Tillval, leveransinfo osv."
-          ></textarea>
-        </label>
-
-        <!-- Spam honeypot -->
-        <input
-          type="text"
-          name="_gotcha"
-          tabindex="-1"
-          autocomplete="off"
-          class="hp"
-        />
-
-        <!-- Email subject + redirect after submit -->
-        <input
-          type="hidden"
-          name="_subject"
-          value="Ny kundformulär-insändning"
-        />
-        <input
-          type="hidden"
-          name="_next"
-          value="https://formspree.io/f/xblzqjgr-thank-you.html"
-        />
-
-        <button type="submit" class="btn">Skicka</button>
-        <p id="form-status" class="muted" aria-live="polite"></p>
       </form>
 
-      <footer class="footer">
-        <small
-          >Genom att skicka godkänner du vår
-          <a href="/privacy.html">Integritetspolicy</a>.</small
-        >
-      </footer>
+      <!-- Company Customer Form -->
+      <form
+        id="company-form"
+        class="customer-form"
+        role="tabpanel"
+        aria-labelledby="company-tab"
+        action="https://formspree.io/f/xblzqjgr"
+        method="POST"
+        novalidate
+      >
+        <div class="stack">
+          <label>
+            Företagsnamn
+            <input
+              name="companyName"
+              type="text"
+              required
+              autocomplete="organization"
+              placeholder="Företag AB"
+            />
+          </label>
+
+          <label>
+            Organisationsnummer
+            <input
+              name="orgNumber"
+              type="text"
+              required
+              placeholder="556123-4567"
+            />
+          </label>
+
+          <label>
+            Kontaktperson
+            <input
+              name="contactPerson"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="Anna Svensson"
+            />
+          </label>
+
+          <div class="grid-2">
+            <label>
+              E-post
+              <input
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="info@foretag.se"
+              />
+            </label>
+            <label>
+              Telefonnummer
+              <input
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                placeholder="0701234567"
+              />
+            </label>
+          </div>
+
+          <label>
+            Adress
+            <input
+              name="address"
+              type="text"
+              required
+              autocomplete="street-address"
+              placeholder="Företagsgatan 1"
+            />
+          </label>
+
+          <div class="grid-2">
+            <label>
+              Postnummer
+              <input
+                name="zip"
+                type="text"
+                required
+                inputmode="numeric"
+                autocomplete="postal-code"
+                placeholder="12345"
+              />
+            </label>
+            <label>
+              Stad
+              <input
+                name="city"
+                type="text"
+                required
+                autocomplete="address-level2"
+                placeholder="Stockholm"
+              />
+            </label>
+          </div>
+
+          <!-- Spam honeypot -->
+          <input
+            type="text"
+            name="_gotcha"
+            tabindex="-1"
+            autocomplete="off"
+            class="hp"
+          />
+
+          <!-- Hidden fields -->
+          <input type="hidden" name="customerType" value="company" />
+          <input
+            type="hidden"
+            name="_subject"
+            value="Ny företagskund registrering"
+          />
+          <input
+            type="hidden"
+            name="_next"
+            value="https://formspree.io/f/xblzqjgr-thank-you.html"
+          />
+
+          <button type="submit" class="btn">Registrera som ny kund</button>
+          <p class="form-status muted" aria-live="polite"></p>
+        </div>
+      </form>
     </main>
+
+    <!-- Site footer -->
+    <footer class="site-footer" aria-label="Sidfot">
+      <div class="site-footer__inner">
+        <div class="site-footer__col">
+          <h2 class="site-footer__title">Hallbergs Motor & Marinservice</h2>
+          <p class="site-footer__tagline">
+            Din pålitliga partner för professionell service av bilar,
+            motorcyklar och båtar.
+          </p>
+        </div>
+        <div class="site-footer__col">
+          <h3 class="site-footer__heading">Tjänster</h3>
+          <ul class="site-footer__services">
+            <li>Bilservice</li>
+            <li>Motorcykelservice</li>
+            <li>Båtservice</li>
+          </ul>
+        </div>
+        <div class="site-footer__col">
+          <h3 class="site-footer__heading">Kontakta Oss</h3>
+          <ul class="site-footer__contact">
+            <li>
+              <span class="site-footer__icon">📞</span>
+              <a href="tel:+46735951009">0735951009</a>
+            </li>
+            <li>
+              <span class="site-footer__icon">✉️</span>
+              <a href="mailto:hallbergsmotormarin@gmail.com"
+                >hallbergsmotormarin@gmail.com</a
+              >
+            </li>
+            <li>
+              <span class="site-footer__icon">📍</span>
+              <span>Torna-Hällestad, 24745, Sverige</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="site-footer__divider"></div>
+      <div class="site-footer__copyright">
+        <small
+          >© 2025 Hallbergs Motor & Marinservice. Alla rättigheter
+          förbehållna.</small
+        >
+      </div>
+    </footer>
 
     <script>
       // Theme toggle + persistence
@@ -155,45 +381,77 @@
       });
     </script>
     <script>
-      // JS submit -> redirect (works on free plan)
+      // Tab switching
       (function () {
-        const form = document.getElementById("customer-form");
-        const status = document.getElementById("form-status");
-        const endpoint = form.getAttribute("action");
+        const tabs = document.querySelectorAll(".tab-btn");
+        const forms = document.querySelectorAll(".customer-form");
 
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const data = new FormData(form);
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            const targetTab = tab.dataset.tab;
 
-          // Optional: basic spam honeypot check
-          if (data.get("_gotcha")) return;
-
-          // UX: disable button while sending
-          const btn = form.querySelector("button[type='submit']");
-          btn.disabled = true;
-          btn.textContent = "Skickar…";
-
-          try {
-            const res = await fetch(endpoint, {
-              method: "POST",
-              body: data,
-              headers: { Accept: "application/json" },
+            // Update tab states
+            tabs.forEach((t) => {
+              t.classList.remove("active");
+              t.setAttribute("aria-selected", "false");
             });
+            tab.classList.add("active");
+            tab.setAttribute("aria-selected", "true");
 
-            if (res.ok) {
-              // success -> go to your page
-              window.location.href = "/thank-you.html"; // or full https://YOUR_DOMAIN/thank-you.html
-            } else {
-              status.textContent = "Kunde inte skicka formuläret. Försök igen.";
+            // Update form visibility
+            forms.forEach((form) => {
+              form.classList.remove("active");
+              if (form.id === `${targetTab}-form`) {
+                form.classList.add("active");
+              }
+            });
+          });
+        });
+      })();
+    </script>
+    <script>
+      // Form submission handler (works for both forms)
+      (function () {
+        const forms = document.querySelectorAll(".customer-form");
+        const endpoint = "https://formspree.io/f/xblzqjgr";
+
+        forms.forEach((form) => {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const data = new FormData(form);
+            const status = form.querySelector(".form-status");
+
+            // Optional: basic spam honeypot check
+            if (data.get("_gotcha")) return;
+
+            // UX: disable button while sending
+            const btn = form.querySelector("button[type='submit']");
+            btn.disabled = true;
+            btn.textContent = "Skickar…";
+
+            try {
+              const res = await fetch(endpoint, {
+                method: "POST",
+                body: data,
+                headers: { Accept: "application/json" },
+              });
+
+              if (res.ok) {
+                // success -> go to your page
+                window.location.href = "/thank-you.html";
+              } else {
+                status.textContent =
+                  "Kunde inte skicka formuläret. Försök igen.";
+                btn.disabled = false;
+                btn.textContent = "Registrera som ny kund";
+              }
+            } catch (err) {
+              status.textContent =
+                "Nätverksfel. Kontrollera uppkopplingen och försök igen.";
               btn.disabled = false;
-              btn.textContent = "Skicka";
+              btn.textContent = "Registrera som ny kund";
             }
-          } catch (err) {
-            status.textContent =
-              "Nätverksfel. Kontrollera uppkopplingen och försök igen.";
-            btn.disabled = false;
-            btn.textContent = "Skicka";
-          }
+          });
         });
       })();
     </script>
